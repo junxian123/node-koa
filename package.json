@@ -1,0 +1,19 @@
+{
+  "name": "node-koa",
+  "version": "1.0.0",
+  "description": "koa二次封装",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "koa"
+  ],
+  "author": "zhoujunxian",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-router": "^9.4.0",
+    "require-directory": "^2.1.1"
+  }
+}
