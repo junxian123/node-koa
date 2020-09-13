@@ -1,14 +1,19 @@
 const Router = require('koa-router')
 const { ParameterException } = require('../../exception/exception')
-const router = new Router({
+const router1 = new Router({
   prefix:'/v1/book'
 })
 
-router.get('/', async(ctx, next) => {
+router1.get('/', async(ctx, next) => {
   throw new global.errs.ParameterException()
-  // ctx.body = {
-  //   message: 'helloWorld'
-  // }
 })
 
-module.exports = router
+const router2 = new Router({
+  prefix: '/v1/classic'
+})
+
+router2.get('/', async(ctx, next) => {
+  ctx.body = "helloworld"
+})
+
+module.exports = {router1,router2,a:2}

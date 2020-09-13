@@ -17,13 +17,14 @@ class InitManager {
 
   static registerRouters() {
     const path = `${process.cwd()}/app/api`
-    requireDirectory(module,path,{
-      visit: whenLoadModule
-    })
+    requireDirectory(module,path,{visit: whenLoadModule})
     function whenLoadModule(router) {
       if(router instanceof Router) {
-        console.log(router.routes)
         InitManager.app.use(router.routes())
+        return
+      }
+      for(const key in router) {
+        whenLoadModule(router[key])
       }
     }
   }
