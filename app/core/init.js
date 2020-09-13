@@ -8,6 +8,7 @@ class InitManager {
     InitManager.registerCatchException()
     InitManager.registerRouters(app)
     InitManager.loadConfig()
+    InitManager.loadExceptions()
   }
 
   static registerCatchException() {
@@ -31,6 +32,12 @@ class InitManager {
     const path = `${process.cwd()}/app/config/config.js`
     const config = require(path)
     global.config = config
+  }
+
+  static loadExceptions() {
+    const path = `${process.cwd()}/app/exception/exception.js`
+    const exceptions = require(path)
+    global.errs = exceptions
   }
 }
 

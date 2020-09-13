@@ -5,10 +5,10 @@ const router = new Router({
 })
 
 router.get('/', async(ctx, next) => {
-  throw new ParameterException()
-  ctx.body = {
-    message: 'helloWorld'
-  }
+  throw new global.errs.ParameterException()
+  // ctx.body = {
+  //   message: 'helloWorld'
+  // }
 })
 
 module.exports = router
