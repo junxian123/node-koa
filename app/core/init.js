@@ -1,11 +1,13 @@
 const requireDirectory = require('require-directory')
 const Router = require('koa-router')
 const catchException = require('../middlewares/global-exception')
+const extendContext = require('../middlewares/extend-context')
 class InitManager {
 
   static initCore(app) {
     InitManager.app = app
     InitManager.registerCatchException()
+    InitManager.registerExtendContext()
     InitManager.loadConfig()
     InitManager.registerRouters(app)
     InitManager.loadExceptions()
@@ -13,6 +15,10 @@ class InitManager {
 
   static registerCatchException() {
     InitManager.app.use(catchException)
+  }
+
+  static registerExtendContext() {
+    InitManager.app.use(extendContext)
   }
 
   static registerRouters() {
