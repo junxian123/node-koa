@@ -6,8 +6,8 @@ class InitManager {
   static initCore(app) {
     InitManager.app = app
     InitManager.registerCatchException()
-    InitManager.registerRouters(app)
     InitManager.loadConfig()
+    InitManager.registerRouters(app)
     InitManager.loadExceptions()
   }
 
