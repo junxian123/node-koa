@@ -13,7 +13,7 @@ node-koa
 │  ├─ config                  #配置文件目录
 │  │  ├─ code-message.js      #返回成功码错误码和返回信息配置
 │  │  └─ config.js            #项目信息配置
-│  ├─ core                    #项目核心代码
+│  ├─ core                    #项目核心代码目录
 │  │  ├─ http-exception.js    #继承Error的自定义HttpException
 │  │  ├─ init.js              #core初始化
 │  │  ├─ lin-validator.js     #参数校验工具
