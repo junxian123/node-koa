@@ -1,11 +1,16 @@
 const Router = require('koa-router')
-const { ParameterException } = require('../../exception/exception')
+const { PositiveIdValidator } = require('../../validator/common')
 const router1 = new Router({
   prefix:'/v1/book'
 })
 
-router1.get('/', async(ctx, next) => {
-  throw new global.errs.ParameterException()
+router1.get('/:id', async(ctx, next) => {
+  const v = await new PositiveIdValidator().validate(ctx)
+  
+  // 异常用法
+  throw new global.errs.ParameterException({
+    code:1,
+  })
 })
 
 const router2 = new Router({

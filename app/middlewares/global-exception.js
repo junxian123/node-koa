@@ -1,5 +1,5 @@
 const HttpException = require("../core/http-exception")
-
+const codeMessage = require('../config/code-message')
 module.exports = async (ctx, next) => {
   try {
     await next()
@@ -10,10 +10,11 @@ module.exports = async (ctx, next) => {
       throw error
     }
     const request = `${ctx.request.method} ${ctx.request.path}`
+    const message = error.message || codeMessage.getMessage(error.code)
     ctx.status = error.statusCode
     ctx.body = {
       code: error.code,
-      message: error.message,
+      message,
       request
     }
   }

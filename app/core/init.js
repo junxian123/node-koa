@@ -1,6 +1,6 @@
 const requireDirectory = require('require-directory')
 const Router = require('koa-router')
-const catchException = require('../middlewares/exception')
+const catchException = require('../middlewares/global-exception')
 class InitManager {
 
   static initCore(app) {
