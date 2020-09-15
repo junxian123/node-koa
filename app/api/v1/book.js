@@ -6,11 +6,7 @@ const router = new Router({
 
 router.get('/:id', async(ctx, next) => {
   const v = await new PositiveIdValidator().validate(ctx)
-<<<<<<< HEAD
   throw new global.errs.ParameterException()
-=======
-  throw new global.errs.ParameterException({code:10002})
->>>>>>> bug-100
 })
 
 
