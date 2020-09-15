@@ -11,6 +11,9 @@ module.exports = async (ctx, next) => {
     }
     const request = `${ctx.request.method} ${ctx.request.path}`
     const message = error.message || codeMessage.getMessage(error.code)
+    if(!message) {
+      throw new Error('[code-message]没有找到相应code的配置项；也没有主动传入message')
+    }
     ctx.status = error.statusCode
     ctx.body = {
       code: error.code,
