@@ -4,7 +4,7 @@ const router = new Router({
   prefix:'/v1/book'
 })
 
-router.get('/:id', async(ctx, next) => {
+router.get('/', async(ctx, next) => {
   const v = await new PositiveIdValidator().validate(ctx)
   throw new global.errs.ParameterException()
 })

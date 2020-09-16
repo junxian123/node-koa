@@ -1,5 +1,6 @@
 const requireDirectory = require('require-directory')
 const Router = require('koa-router')
+const bodyparser = require('koa-bodyparser')
 const catchException = require('../middleware/global-exception')
 const extendContext = require('../middleware/extend-context')
 class InitManager {
@@ -8,6 +9,7 @@ class InitManager {
     InitManager.app = app
     InitManager.registerCatchException()
     InitManager.registerExtendContext()
+    InitManager.registerBodyParser()
     InitManager.loadConfig()
     InitManager.registerRouters(app)
     InitManager.loadExceptions()
@@ -15,6 +17,10 @@ class InitManager {
 
   static registerCatchException() {
     InitManager.app.use(catchException)
+  }
+
+  static registerBodyParser() {
+    InitManager.app.use(bodyparser())
   }
 
   static registerExtendContext() {
