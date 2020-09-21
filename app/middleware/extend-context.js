@@ -8,8 +8,7 @@ const { unset } = require('lodash')
 module.exports = async (ctx, next) => {
   ctx.success = (data) => {
     const success = new Success(data)
-    // 优先采用config message
-    const message = codeMessage.getMessage(success.code) || success.message
+    const message = success.message || codeMessage.getMessage(success.code)
     if(!message) {
       throw new Error('[code-message]没有找到相应code的配置项；也没有主动传入message')
     }

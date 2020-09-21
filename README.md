@@ -14,14 +14,13 @@ node-koa
 │  │  ├─ code-message.js      #返回成功码错误码和返回信息配置
 │  │  └─ config.js            #项目信息配置
 │  ├─ core                    #项目核心代码目录
-│  │  ├─ http-exception.js    #继承Error的自定义HttpException
+│  │  ├─ http-exception.js    #自定义异常
 │  │  ├─ init.js              #core初始化
 │  │  ├─ lin-validator.js     #参数校验工具
-│  │  └─ util.js              #工具函数
-│  ├─ exception               #自定义异常模块
-│  │  └─ exception.js       
+│  │  └─ util.js              #工具函数    
 │  ├─ middleware              #中间件目录
 │  │  └─ global-exception.js  #全局处理异常
+│  │  └─ extend-context.js    #扩展上下文context
 │  └─ validator               #校验器模块
 │     └─ common.js
 ├─ app.js                     #启动文件
@@ -85,44 +84,43 @@ module.exports = {
 
 ```js
 const Router = require('koa-router')
-const {ParameterException} = require('../../exception/exception')
+const {Parameter} = require('../../core/http-exception')
 const router = new Router({
   prefix:'/v1/book'
 })
 
 router.get('/', async(ctx, next) => {
   // 第一种方式用法，省了导入模块，较为方便
-  throw new global.errs.ParameterException()
+  throw new global.errs.Parameter()
   // 第二种方式用法，需要导入模块
-  throw new ParameterException()
+  throw new Parameter()
 })
 module.exports = router
 ```
 
-可以看到上面我们使用<code>ParameterException</code>。探究一下个东西，这个ParameterException写在<code>exception/exception.js</code>文件中，以后向追加其他异常处理建议集中写在这个文件中。
+可以看到上面我们使用<code>Parameter</code>。探究一下个东西，这个Parameter写在<code>core/http-exception.js</code>文件中，以后向追加其他异常处理建议集中写在这个文件中。
 
 ```js
-const HttpException = require('../core/http-exception')
-class ParameterException extends HttpException{
+class Parameter extends HttpException{
   constructor({message, code=10001} = {}) {
     super()
-    this.statusCode = 400
+    this.status = 400
     this.code = code
     this.message = message
   }
 }
 module.exports =  {
-  ParameterException
+  Parameter
 }
 ```
 
-我们可以看到<code>ParameterException</code>继承了<code>HttpException基类</code>，其实HttpException也继承了<code>Error</code>，因为这样我们才能通过<code>try..catch</code>捕获到异常。ParameterException编写了一个构造函数，如果以后想自己写自定义异常，请务必写成这个传参格式，如果不这样写，有可能会报错。参数列表中有<code>code</code>和<code>message</code>这两个参数，实际上还有个statusCode，但是它是几乎不需要改变，代表一种类型的异常。
+我们可以看到<code>Parameter</code>继承了<code>HttpException基类</code>，其实HttpException也继承了<code>Error</code>，因为这样我们才能通过<code>try..catch</code>捕获到异常。Parameter编写了一个构造函数，如果以后想自己写自定义异常，请务必写成这个传参格式，如果不这样写，有可能会报错。参数列表中有<code>code</code>和<code>message</code>这两个参数，实际上还有个status，但是它是几乎不需要改变，代表一种类型的异常。
 
 - <code>code</code>代表自定异常的错误码，这个code是有具体意义的，而且非常方便于前端的处理。
 - <code>message</code> 代表异常错误的信息。
-- <code>statusCode</code> 代表Http状态码。
+- <code>status</code> 代表Http状态码。
 
-ParameterException构造函数中参数列表<code>code</code>有个默认参数<code>10001</code>，刚才说了这个<code>code</code>是有具体的意义的，那它代表什么？
+Parameter构造函数中参数列表<code>code</code>有个默认参数<code>10001</code>，刚才说了这个<code>code</code>是有具体的意义的，那它代表什么？
 
 可以看到项目目录有<code>config/code-message.js</code>这个文件记录着这个项目所有的错误码以及对应的错误信息，建议所有的错误码都集中写在这个文件。
 
@@ -130,20 +128,24 @@ ParameterException构造函数中参数列表<code>code</code>有个默认参数
 function getMessage(code) {
   return this[code] || ''
 }
+
 module.exports = {
   getMessage,
   0: 'ok',
   1: '创建成功',
   2: '删除成功',
   3: '更新成功',
-  999: '服务器错误',
-  10001: '参数错误'
+  9999: '服务器错误',
+  10000: '参数错误',
+  10001: '授权失败',
+  10002: '禁止访问',
+  10003: '资源不存在'
 }
 ```
 
 上面代码就是<code>config/code-message.js</code>中的代码，可以把错误码追加在<code>module.exports</code>中。<code>getMessage方法</code>一般来说都不用管，主要用于处理全局异常中间件使用的一个通过code码获取message的一个方法。
 
-我们继续回到这个异常调用这里<code>throw new global.errs.ParameterException()</code>，刚刚说了这个对象是可以传入两个参数的。下面代码演示并解释传参方式。
+我们继续回到这个异常调用这里<code>throw new global.errs.Parameter()</code>，刚刚说了这个对象是可以传入两个参数的。下面代码演示并解释传参方式。
 
 ```js
 //第一种不传入参数，会采用默认code以及message
@@ -188,3 +190,43 @@ module.exports = {
 > Lin-cms-koa文档 https://doc.cms.talelin.com/server/
 >
 > 参数校验模块文档 https://doc.cms.talelin.com/server/koa/validator.html
+
+#### 上下文Context扩展
+
+##### Success方法
+
+作用：一般用于对增删改这些API，给用户返回成功的提示。其实它返回的格式是跟HttpException一样的。
+
+用法：
+
+```js
+ //第一种方式 不传入任何参数，就会采用默认参数
+router.get('/', async ctx => {
+  ctx.success()
+})
+ // 第二种方式传入对象，这个跟之前异常传入的参数是一样的
+router.get('/', async ctx => {
+  ctx.success({
+      code: 1
+  })
+})
+```
+
+##### json方法
+
+作用：可以在返回数据时，删除掉一些不要的属性，只不过这是一个浅层次的删除，深层次也不推荐，其实深层次删除挺消耗性能的。
+
+用法：
+
+```js
+// 第二个参数是一个可选参数，它是一个数组，写入你要删除的属性。
+router.get('/', async ctx => {
+  const obj = {
+    id: 1,
+    title: 'koa',
+    create_time
+  }
+  ctx.json(obj,['create_time']) 
+})
+```
+

@@ -5,14 +5,12 @@ const router = new Router({
 })
 
 router.get('/', async ctx => {
-  // const v = await new PositiveIdValidator().validate(ctx)
-  const data = {
+  const obj = {
     id: 1,
-    name: 'ccc',
-    create_time: '12312'
+    title: 'koa',
+    create_time
   }
-  ctx.json(data,['create_time'])
-  // throw new global.errs.UnAuthorization()
+  ctx.json(obj,['create_time']) 
 })
 
 
