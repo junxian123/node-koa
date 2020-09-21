@@ -6,7 +6,7 @@
 
 const validator = require('validator')
 const {
-    ParameterException
+    Parameter
 } = require('./http-exception')
 const {
     get,
@@ -84,7 +84,7 @@ class LinValidator {
             }
         }
         if (errorMsgs.length != 0) {
-            throw new ParameterException({
+            throw new Parameter({
                 message: errorMsgs
             })
         }

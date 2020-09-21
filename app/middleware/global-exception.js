@@ -14,7 +14,7 @@ module.exports = async (ctx, next) => {
     if(!message) {
       throw new Error('[code-message]没有找到相应code的配置项；也没有主动传入message')
     }
-    ctx.status = error.statusCode
+    ctx.status = error.status
     ctx.body = {
       code: error.code,
       message,
