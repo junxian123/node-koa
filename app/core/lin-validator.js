@@ -7,7 +7,7 @@
 const validator = require('validator')
 const {
     ParameterException
-} = require('../exception/exception')
+} = require('./http-exception')
 const {
     get,
     last,

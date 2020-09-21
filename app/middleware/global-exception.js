@@ -1,4 +1,4 @@
-const HttpException = require("../core/http-exception")
+const {HttpException} = require("../core/http-exception")
 const codeMessage = require('../config/code-message')
 module.exports = async (ctx, next) => {
   try {

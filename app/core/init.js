@@ -48,7 +48,7 @@ class InitManager {
   }
 
   static loadExceptions() {
-    const path = `${process.cwd()}/app/exception/exception.js`
+    const path = `${process.cwd()}/app/core/http-exception.js`
     const exceptions = require(path)
     global.errs = exceptions
   }
